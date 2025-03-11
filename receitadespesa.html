@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Controle Financeiro - Despesas e Receitas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #777;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+
+        .form-section input,
+        .form-section select,
+        .form-section button {
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: calc(33.33% - 10px);
+            margin-right: 10px;
+        }
+
+        .form-section button {
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .form-section button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .expenses-table,
+        .income-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .expenses-table th,
+        .income-table th,
+        .expenses-table td,
+        .income-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .expenses-table th,
+        .income-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        .expense-item,
+        .income-item {
+            background-color: #f9f9f9;
+        }
+
+        .expense-item:nth-child(even),
+        .income-item:nth-child(even) {
+            background-color: #f1f1f1;
+        }
+
+        .total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .total-gasto {
+            background-color: #ff6464; /* Vermelho claro */
+        }
+
+        .total-adquirido {
+            background-color: #a5d6a7; /* Verde claro */
+        }
+
+        .clear-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .clear-button button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-right: 10px;
+        }
+
+        .clear-button button:hover {
+            background-color: #2e7d32;
+            transform: translateY(-2px);
+        }
+
+        .clear-button .btn-voltar {
+            background-color: #4CAF50;
+        }
+
+        .clear-button .btn-voltar:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Controle Financeiro</h1>
+            <p>Organize suas despesas e receitas pessoais de forma simples e eficiente.</p>
+        </header>
+
+        <!-- Seção de Despesas -->
+        <div class="section">
+            <h2>Adicionar Despesa</h2>
+            <div class="form-section">
+                <input type="text" id="descricaoDespesa" placeholder="Descrição da despesa">
+                <input type="number" id="valorDespesa" placeholder="Valor da despesa" min="0" step="0.01">
+                <select id="categoriaDespesa">
+                    <option value="alimentacao">Alimentação</option>
+                    <option value="transporte">Transporte</option>
+                    <option value="moradia">Moradia</option>
+                    <option value="lazer">Lazer</option>
+                    <option value="saude">Saúde</option>
+                    <option value="outros">Outros</option>
+                </select>
+                <button onclick="adicionarDespesa()">Adicionar Despesa</button>
+            </div>
+
+            <!-- Tabela de Despesas -->
+            <table class="expenses-table">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Categoria</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="despesas-lista">
+                    <!-- Despesas serão listadas aqui -->
+                </tbody>
+            </table>
+
+            <div class="total total-gasto">
+                <p>Valor total gasto: R$ <span id="totalDespesas">0.00</span></p>
+            </div>
+        </div>
+
+        <!-- Seção de Receitas -->
+        <div class="section">
+            <h2>Adicionar Receita</h2>
+            <div class="form-section">
+                <input type="text" id="descricaoReceita" placeholder="Descrição da receita">
+                <input type="number" id="valorReceita" placeholder="Valor da receita" min="0" step="0.01">
+                <select id="categoriaReceita">
+                    <option value="salario">Salário</option>
+                    <option value="freelance">Freelance</option>
+                    <option value="investimentos">Investimentos</option>
+                    <option value="outros">Outros</option>
+                </select>
+                <button onclick="adicionarReceita()">Adicionar Receita</button>
+            </div>
+
+            <!-- Tabela de Receitas -->
+            <table class="income-table">
+                <thead>
+                    <tr>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Categoria</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="receitas-lista">
+                    <!-- Receitas serão listadas aqui -->
+                </tbody>
+            </table>
+
+            <div class="total total-adquirido">
+                <p>Valor total adquirido: R$ <span id="totalReceitas">0.00</span></p>
+            </div>
+        </div>
+
+        <!-- Botões Limpar e Voltar -->
+        <div class="clear-button">
+            <button onclick="limparTudo()">Limpar</button>
+            <button class="btn-voltar" onclick="window.location.href='index.html'">Voltar</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 Controle Financeiro</p>
+    </div>
+
+    <script>
+        // Variáveis para armazenar despesas e receitas
+        let despesas = [];
+        let receitas = [];
+        
+        // Função para adicionar uma despesa
+        function adicionarDespesa() {
+            const descricao = document.getElementById('descricaoDespesa').value;
+            const valor = parseFloat(document.getElementById('valorDespesa').value);
+            const categoria = document.getElementById('categoriaDespesa').value;
+
+            if (descricao && !isNaN(valor) && valor > 0) {
+                const despesa = { descricao, valor, categoria };
+                despesas.push(despesa);
+                atualizarTabelaDespesas();
+                limparFormularioDespesa();
+            } else {
+                alert("Preencha todos os campos corretamente!");
+            }
+        }
+
+        // Função para adicionar uma receita
+        function adicionarReceita() {
+            const descricao = document.getElementById('descricaoReceita').value;
+            const valor = parseFloat(document.getElementById('valorReceita').value);
+            const categoria = document.getElementById('categoriaReceita').value;
+
+            if (descricao && !isNaN(valor) && valor > 0) {
+                const receita = { descricao, valor, categoria };
+                receitas.push(receita);
+                atualizarTabelaReceitas();
+                limparFormularioReceita();
+            } else {
+                alert("Preencha todos os campos corretamente!");
+            }
+        }
+
+        // Função para limpar o formulário de despesas
+        function limparFormularioDespesa() {
+            document.getElementById('descricaoDespesa').value = '';
+            document.getElementById('valorDespesa').value = '';
+            document.getElementById('categoriaDespesa').value = 'alimentacao';
+        }
+
+        // Função para limpar o formulário de receitas
+        function limparFormularioReceita() {
+            document.getElementById('descricaoReceita').value = '';
+            document.getElementById('valorReceita').value = '';
+            document.getElementById('categoriaReceita').value = 'salario';
+        }
+
+        // Função para atualizar a tabela de despesas
+        function atualizarTabelaDespesas() {
+            const despesasLista = document.getElementById('despesas-lista');
+            despesasLista.innerHTML = '';
+            let totalDespesas = 0;
+
+            despesas.forEach((despesa, index) => {
+                totalDespesas += despesa.valor;
+                const linha = document.createElement('tr');
+                linha.classList.add('expense-item');
+                linha.innerHTML = `
+                    <td>${despesa.descricao}</td>
+                    <td>R$ ${despesa.valor.toFixed(2)}</td>
+                    <td>${despesa.categoria}</td>
+                    <td><button onclick="removerDespesa(${index})">Remover</button></td>
+                `;
+                despesasLista.appendChild(linha);
+            });
+
+            document.getElementById('totalDespesas').textContent = totalDespesas.toFixed(2);
+        }
+
+        // Função para atualizar a tabela de receitas
+        function atualizarTabelaReceitas() {
+            const receitasLista = document.getElementById('receitas-lista');
+            receitasLista.innerHTML = '';
+            let totalReceitas = 0;
+
+            receitas.forEach((receita, index) => {
+                totalReceitas += receita.valor;
+                const linha = document.createElement('tr');
+                linha.classList.add('income-item');
+                linha.innerHTML = `
+                    <td>${receita.descricao}</td>
+                    <td>R$ ${receita.valor.toFixed(2)}</td>
+                    <td>${receita.categoria}</td>
+                    <td><button onclick="removerReceita(${index})">Remover</button></td>
+                `;
+                receitasLista.appendChild(linha);
+            });
+
+            document.getElementById('totalReceitas').textContent = totalReceitas.toFixed(2);
+        }
+
+        // Função para remover uma despesa
+        function removerDespesa(index) {
+            despesas.splice(index, 1);
+            atualizarTabelaDespesas();
+        }
+
+        // Função para remover uma receita
+        function removerReceita(index) {
+            receitas.splice(index, 1);
+            atualizarTabelaReceitas();
+        }
+
+        // Função para limpar todos os dados
+        function limparTudo() {
+            despesas = [];
+            receitas = [];
+            atualizarTabelaDespesas();
+            atualizarTabelaReceitas();
+            limparFormularioDespesa();
+            limparFormularioReceita();
+        }
+    </script>
+</body>
+</html>

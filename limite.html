@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Controle Financeiro - Despesas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f0f4f8; /* Cor de fundo da página (cinza claro) */
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 20px auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #2e7d32; /* Cor do texto */
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            background: #f0f4f8; /* Cor de fundo cinza claro */
+            border-radius: 15px; /* Bordas arredondadas */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #2e7d32; /* Cor do texto */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: #f0f4f8; /* Cor de fundo cinza claro */
+            padding: 10px 20px;
+            border-radius: 15px; /* Bordas arredondadas */
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section input,
+        .form-section select {
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            width: 200px;
+            margin: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .form-section input::placeholder,
+        .form-section select {
+            color: #666;
+        }
+
+        .form-section input:focus,
+        .form-section select:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 10px rgba(46, 125, 50, 0.3);
+        }
+
+        .form-section button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 10px;
+            border: none;
+            background: #2e7d32;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-section button:hover {
+            background: #1b5e20;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .expenses-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .expenses-table th,
+        .expenses-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .expenses-table th {
+            background: rgba(46, 125, 50, 0.1);
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .expense-item {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .expense-item:nth-child(even) {
+            background: rgba(242, 242, 242, 0.9);
+        }
+
+        .expense-item:hover {
+            background: rgba(232, 232, 232, 0.9);
+        }
+
+        .total,
+        .limite {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            background: #f0f4f8; /* Cor de fundo cinza claro */
+            padding: 10px 20px;
+            border-radius: 15px; /* Bordas arredondadas */
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .total {
+            color: #ff4b4b; /* Cor do texto (laranja) */
+        }
+
+        .limite {
+            color: #2e7d32; /* Cor do texto (verde) */
+        }
+
+        .limite.negativo {
+            color: #ff6b6b; /* Cor do texto quando o limite é negativo */
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 40px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        /* Estilo para os botões "Limpar" e "Voltar" */
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 10px;
+            border: none;
+            background: #2e7d32;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            margin: 0 10px;
+        }
+
+        .button-container button:hover {
+            background: #2e7d32;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .button-container button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Controle Financeiro</h1>
+            <p>Organize suas despesas de forma simples e eficiente.</p>
+        </header>
+
+        <!-- Formulário para definir o limite de gastos -->
+        <div class="form-section">
+            <h2>Definir Limite de Gastos</h2>
+            <input type="number" id="limiteGastos" placeholder="Limite de gastos" min="0" step="0.01">
+            <div>
+                <button onclick="definirLimite()">Definir Limite</button>
+            </div>
+        </div>
+
+        <!-- Formulário de Inserção de Despesa -->
+        <div class="form-section">
+            <h2>Adicionar Despesa</h2>
+            <input type="text" id="descricaoDespesa" placeholder="Descrição da despesa">
+            <input type="number" id="valorDespesa" placeholder="Valor da despesa" min="0" step="0.01">
+            <select id="categoriaDespesa">
+                <option value="alimentacao">Alimentação</option>
+                <option value="transporte">Transporte</option>
+                <option value="moradia">Moradia</option>
+                <option value="lazer">Lazer</option>
+                <option value="saude">Saúde</option>
+                <option value="outros">Outros</option>
+            </select>
+            <div>
+                <button onclick="adicionarDespesa()">Adicionar Despesa</button>
+            </div>
+        </div>
+
+        <!-- Tabela de Despesas -->
+        <table class="expenses-table">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Categoria</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="despesas-lista">
+                <!-- Despesas serão listadas aqui -->
+            </tbody>
+        </table>
+
+        <div class="total">
+            <p>Total de Despesas: R$ <span id="totalDespesas">0.00</span></p>
+        </div>
+
+        <div class="limite">
+            <p>Limite Restante: R$ <span id="limiteRestante">0.00</span></p>
+        </div>
+
+        <!-- Botões "Limpar" e "Voltar" -->
+        <div class="button-container">
+            <button onclick="limparTudo()">Limpar </button>
+            <button onclick="voltarParaHome()">Voltar</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 Controle Financeiro</p>
+    </div>
+
+    <script>
+        // Variáveis para armazenar despesas e limite
+        let despesas = JSON.parse(localStorage.getItem('despesas')) || [];
+        let limite = parseFloat(localStorage.getItem('limite')) || 0;
+
+        // Função para salvar despesas e limite no localStorage
+        function salvarDados() {
+            localStorage.setItem('despesas', JSON.stringify(despesas));
+            localStorage.setItem('limite', limite);
+        }
+
+        // Função para definir o limite de gastos
+        function definirLimite() {
+            const novoLimite = parseFloat(document.getElementById('limiteGastos').value);
+
+            if (!isNaN(novoLimite) && novoLimite >= 0) {
+                limite = novoLimite;
+                salvarDados();
+                atualizarTabelaDespesas();
+                document.getElementById('limiteGastos').value = '';
+            } else {
+                alert("Insira um valor válido para o limite!");
+            }
+        }
+
+        // Função para adicionar uma despesa
+        function adicionarDespesa() {
+            const descricao = document.getElementById('descricaoDespesa').value.trim();
+            const valor = parseFloat(document.getElementById('valorDespesa').value);
+            const categoria = document.getElementById('categoriaDespesa').value;
+
+            if (descricao && !isNaN(valor) && valor > 0) {
+                if (valor > limite) {
+                    alert("Despesa excede o limite de gastos!");
+                    return;
+                }
+
+                const despesa = { descricao, valor, categoria };
+                despesas.push(despesa);
+                limite -= valor;
+                salvarDados();
+                atualizarTabelaDespesas();
+                limparFormularioDespesa();
+            } else {
+                alert("Preencha todos os campos corretamente! O valor deve ser maior que zero.");
+            }
+        }
+
+        // Função para limpar o formulário de despesas
+        function limparFormularioDespesa() {
+            document.getElementById('descricaoDespesa').value = '';
+            document.getElementById('valorDespesa').value = '';
+            document.getElementById('categoriaDespesa').value = 'alimentacao';
+        }
+
+        // Função para atualizar a tabela de despesas e o limite restante
+        function atualizarTabelaDespesas() {
+            const despesasLista = document.getElementById('despesas-lista');
+            despesasLista.innerHTML = '';
+            let totalDespesas = 0;
+
+            despesas.forEach((despesa, index) => {
+                totalDespesas += despesa.valor;
+                const linha = document.createElement('tr');
+                linha.classList.add('expense-item');
+                linha.innerHTML = `
+                    <td>${despesa.descricao}</td>
+                    <td>R$ ${despesa.valor.toFixed(2)}</td>
+                    <td>${despesa.categoria}</td>
+                    <td><button onclick="removerDespesa(${index})">Remover</button></td>
+                `;
+                despesasLista.appendChild(linha);
+            });
+
+            document.getElementById('totalDespesas').textContent = totalDespesas.toFixed(2);
+            const limiteRestanteElement = document.getElementById('limiteRestante');
+            limiteRestanteElement.textContent = limite.toFixed(2);
+
+            // Altera a cor do limite restante se for negativo
+            if (limite < 0) {
+                limiteRestanteElement.classList.add('negativo');
+            } else {
+                limiteRestanteElement.classList.remove('negativo');
+            }
+        }
+
+        // Função para remover uma despesa
+        function removerDespesa(index) {
+            const despesaRemovida = despesas.splice(index, 1)[0];
+            limite += despesaRemovida.valor;
+            salvarDados();
+            atualizarTabelaDespesas();
+        }
+
+        // Função para limpar tudo
+        function limparTudo() {
+            despesas = [];
+            limite = 0;
+            salvarDados();
+            atualizarTabelaDespesas();
+            limparFormularioDespesa();
+            document.getElementById('limiteGastos').value = '';
+        }
+
+        // Função para voltar para a página home (index.html)
+        function voltarParaHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Carregar dados ao iniciar a página
+        window.onload = function () {
+            atualizarTabelaDespesas();
+        };
+    </script>
+</body>
+</html>

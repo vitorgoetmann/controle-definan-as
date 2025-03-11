@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro - Home</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo do corpo da página */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        /* Container principal */
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Título da página */
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        /* Descrição da página */
+        p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        /* Container dos botões */
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Estilo dos botões */
+        .button {
+            background-color: #1abc9c;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            flex: 1 1 calc(50% - 20px);
+            max-width: calc(50% - 20px);
+        }
+
+        /* Efeito de hover nos botões */
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Estilo específico para o botão de despesas/receitas */
+        .button-despesas {
+            background-color: #2e7d32;
+        }
+
+        /* Estilo específico para o botão de limite de gastos */
+        .button-limite {
+            background-color: #2e7d32;
+        }
+
+        /* Rodapé */
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            .button {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Controle Financeiro</h1>
+        <p>Organize suas despesas e receitas pessoais de forma simples e eficiente.</p>
+        <div class="button-container">
+            <a href="receitadespesa.html" class="button button-despesas">Minhas Despesas/Receitas</a>
+            <a href="limite.html" class="button button-limite">Limite de Gastos</a>
+        </div>
+        <footer>
+            © 2025 Controle Financeiro
+        </footer>
+    </div>
+</body>
+</html>
